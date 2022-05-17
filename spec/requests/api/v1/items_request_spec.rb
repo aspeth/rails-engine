@@ -89,7 +89,7 @@ RSpec.describe "Item API requests" do
     }
 
     headers = {"CONTENT_TYPE" => "application/json"}
-    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+    patch "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
 
     expect(response).to be_successful
 
@@ -108,7 +108,7 @@ RSpec.describe "Item API requests" do
     }
 
     headers = {"CONTENT_TYPE" => "application/json"}
-    put "/api/v1/items", headers: headers, params: JSON.generate(item: new_item_params)
+    put "/api/v1/items/#{new_item.id}", headers: headers, params: JSON.generate(item: new_item_params)
 
     updated_item = Item.last
 
