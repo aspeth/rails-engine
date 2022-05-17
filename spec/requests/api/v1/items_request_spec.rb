@@ -77,4 +77,44 @@ RSpec.describe "Item API requests" do
     expect(new_item.unit_price).to eq(item_params[:unit_price])
     expect(new_item.merchant_id).to eq(item_params[:merchant_id])
   end
+
+  it "can edit items" do
+    merchant_id = create(:merchant).id
+
+    item_params = {
+      name: 'Headphones',
+      description: 'good for music',
+      unit_price: 10.1,
+      merchant_id: merchant_id
+    }
+
+    headers = {"CONTENT_TYPE" => "application/json"}
+    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+
+    expect(response).to be_successful
+
+    new_item = Item.last
+
+    expect(new_item.name).to eq(item_params[:name])
+    expect(new_item.description).to eq(item_params[:description])
+    expect(new_item.unit_price).to eq(item_params[:unit_price])
+    expect(new_item.merchant_id).to eq(item_params[:merchant_id])
+
+    new_item_params = {
+      name: 'Glasses',
+      description: 'good for seeing',
+      unit_price: 21.2,
+      merchant_id: merchant_id
+    }
+
+    headers = {"CONTENT_TYPE" => "application/json"}
+    put "/api/v1/items", headers: headers, params: JSON.generate(item: new_item_params)
+
+    updated_item = Item.last
+
+    expect(updated_item.name).to eq(new_item_params[:name])
+    expect(updated_item.description).to eq(new_item_params[:description])
+    expect(updated_item.unit_price).to eq(new_item_params[:unit_price])
+    expect(updated_item.merchant_id).to eq(new_item_params[:merchant_id])
+  end
 end
