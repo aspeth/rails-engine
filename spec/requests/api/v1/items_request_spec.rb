@@ -54,4 +54,26 @@ RSpec.describe "Item API requests" do
     expect(item[:data][:attributes]).to have_key(:merchant_id)
     expect(item[:data][:attributes][:merchant_id]).to be_an(Integer)
   end
+
+  it "can create items" do
+    merchant_id = create(:merchant).id
+
+    item_params = {
+      name: 'Headphones',
+      description: 'good for music',
+      unit_price: 10.1,
+      merchant_id: merchant_id
+    }
+
+    post "/api/v1/items", params: JSON.generate(item_params)
+
+    expect(response).to be_successful
+
+    new_item = Item.last
+
+    expect(new_item.name).to eq(item_params[:name])
+    expect(new_item.description).to eq(item_params[:description])
+    expect(new_item.unit_price).to eq(item_params[:unit_price])
+    expect(new_item.merchant_id).to eq(item_params[:merchant_id])
+  end
 end
