@@ -11,7 +11,10 @@ class Api::V1::ItemsController < ApplicationController
 
   def create
     merchant = Merchant.find(params[:item][:merchant_id])
-    merchant.items.create!(item_params)
+    item = merchant.items.new(item_params)
+    if item.save
+      render json: ItemSerializer.new(item), status: :created
+    end
   end
 
   private
