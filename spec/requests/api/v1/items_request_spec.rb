@@ -89,7 +89,7 @@ RSpec.describe "Item API requests" do
     }
 
     headers = {"CONTENT_TYPE" => "application/json"}
-    patch "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
 
     expect(response).to be_successful
 
@@ -108,7 +108,7 @@ RSpec.describe "Item API requests" do
     }
 
     headers = {"CONTENT_TYPE" => "application/json"}
-    put "/api/v1/items/#{new_item.id}", headers: headers, params: JSON.generate(item: new_item_params)
+    patch "/api/v1/items/#{new_item.id}", headers: headers, params: JSON.generate(item: new_item_params)
 
     updated_item = Item.last
 
@@ -116,5 +116,20 @@ RSpec.describe "Item API requests" do
     expect(updated_item.description).to eq(new_item_params[:description])
     expect(updated_item.unit_price).to eq(new_item_params[:unit_price])
     expect(updated_item.merchant_id).to eq(new_item_params[:merchant_id])
+  end
+
+  it "can get an item's merchant" do
+    merchant = create(:merchant)
+
+    item = create(:item, merchant_id: merchant.id)
+
+    get "/api/v1/items/#{item.id}/merchant"
+
+    expect(response).to be_successful
+
+    found_merchant = JSON.parse(response.body, symbolize_names: true)
+
+    expect(found_merchant.count).to eq(1)
+    expect(found_merchant[:data][:attributes][:name]).to eq(merchant.name)
   end
 end
