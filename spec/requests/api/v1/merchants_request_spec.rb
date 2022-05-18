@@ -62,11 +62,35 @@ RSpec.describe "Merchant API requests" do
 
   it "returns 404 if merchant not found" do
     get "/api/v1/merchants/1234567/items"
-
     expect(response.status).to eq(404)
     
     get "/api/v1/merchants/1234567"
-
     expect(response.status).to eq(404)
+    
+    get "/api/v1/merchants"
+    expect(response.status).to eq(404)
+  end
+
+  it "can find merchants by searching with query params" do
+    merchant_1 = create(:merchant, name: "Rubber Ducky, LLC")
+    merchant_2 = create(:merchant, name: "Pen Store")
+
+    get "/api/v1/merchants/find?name=ducky"
+
+    expect(response).to be_successful
+    merchant = JSON.parse(response.body, symbolize_names: true)[:data]
+
+    expect(merchant[:attributes][:name]).to eq(merchant_1.name)
+  end
+  
+  it "returns a message if no match found" do
+    merchant_1 = create(:merchant, name: "Rubber Ducky, LLC")
+    merchant_2 = create(:merchant, name: "Pen Store")
+
+    get "/api/v1/merchants/find?name=squiggly_piggly"
+
+    message = JSON.parse(response.body, symbolize_names: true)
+    expect(message).to have_key(:data)
+    expect(message[:data][:message]).to eq("No match found")
   end
 end
