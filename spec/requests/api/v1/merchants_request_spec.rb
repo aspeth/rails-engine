@@ -93,4 +93,24 @@ RSpec.describe "Merchant API requests" do
     expect(message).to have_key(:data)
     expect(message[:data][:message]).to eq("No match found")
   end
+
+  it "finds all merchants by name fragment" do
+    merchant_1 = create(:merchant, name: "Rubber Ducky, LLC")
+    merchant_2 = create(:merchant, name: "Ducks Inc.")
+    merchant_3 = create(:merchant, name: "The Duck Store")
+    merchant_4 = create(:merchant, name: "A Different Store")
+
+    get "/api/v1/merchants/find_all?name=dU"
+
+    expect(response).to be_successful
+
+    merchants = JSON.parse(response.body, symbolize_names: true)[:data]
+    
+    expect(merchants.count).to eq(3)
+
+    merchants.each do |merchant|
+      expect(merchant[:attributes]).to have_key(:name)
+      expect(merchant[:attributes][:name]).to be_a(String)
+    end
+  end
 end
