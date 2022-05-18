@@ -213,4 +213,22 @@ RSpec.describe "Item API requests" do
       expect(item[:attributes][:name]).to_not eq("Yellow Duck")
     end
   end
+
+  it "can find one item by min price" do
+    merchant_1 = create(:merchant, name: "Rubber Ducky, LLC")
+    
+    item_1 = create(:item, name: "Yellow Duck", merchant_id: merchant_1.id, unit_price: 23)
+    item_2 = create(:item, name: "Different Item", merchant_id: merchant_1.id, unit_price: 55)
+    item_3 = create(:item, name: "Another Item", merchant_id: merchant_1.id, unit_price: 19)
+    item_4 = create(:item, name: "Last Item", merchant_id: merchant_1.id, unit_price: 60)
+    
+    get "/api/v1/items/find?min_price=50"
+
+    expect(response).to be_successful
+
+    item = JSON.parse(response.body, symbolize_names: true)
+
+    expect(item.count).to eq(1)
+    expect(item[:data][:attributes][:name]).to eq("Different Item")
+  end
 end
