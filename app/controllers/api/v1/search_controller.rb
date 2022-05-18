@@ -7,4 +7,9 @@ class Api::V1::SearchController < ApplicationController
       render json: MerchantSerializer.new(merchant)
     end
   end
+
+  def index
+    items = Item.where("name ilike ?", "%#{params[:name]}%")
+    render json: ItemSerializer.new(items)
+  end
 end
