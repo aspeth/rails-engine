@@ -19,7 +19,12 @@ class Api::V1::SearchController < ApplicationController
   end
 
   def item
-    item = Item.where("name ilike ?", "%#{params[:name]}%").first
+    if params[:name]
+      item = Item.where("name ilike ?", "%#{params[:name]}%").first
+    elsif params[:min_price]
+      item = Item.where("unit_price > ?", "#{params[:min_price]}").first
+    end
+
     if item.nil?
       render json: { data: { message: "No match found" } }
     else
