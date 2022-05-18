@@ -20,6 +20,10 @@ class Api::V1::SearchController < ApplicationController
 
   def item
     item = Item.where("name ilike ?", "%#{params[:name]}%").first
-    render json: ItemSerializer.new(item)
+    if item.nil?
+      render json: { data: { message: "No match found" } }
+    else
+      render json: ItemSerializer.new(item)
+    end
   end
 end
