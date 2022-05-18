@@ -132,4 +132,16 @@ RSpec.describe "Item API requests" do
     expect(found_merchant.count).to eq(1)
     expect(found_merchant[:data][:attributes][:name]).to eq(merchant.name)
   end
+
+
+  it "returns 404 if item not found" do
+    get "/api/v1/items/1234567/merchant"
+    expect(response.status).to eq(404)
+    
+    get "/api/v1/items/1234567"
+    expect(response.status).to eq(404)
+    
+    get "/api/v1/items"
+    expect(response.status).to eq(404)
+  end
 end
