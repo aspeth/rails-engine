@@ -17,4 +17,9 @@ class Api::V1::SearchController < ApplicationController
     merchants = Merchant.where("name ILIKE ?", "%#{params[:name]}%")
     render json: MerchantSerializer.new(merchants)
   end
+
+  def item
+    item = Item.where("name ilike ?", "%#{params[:name]}%").first
+    render json: ItemSerializer.new(item)
+  end
 end
