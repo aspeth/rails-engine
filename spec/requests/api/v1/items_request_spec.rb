@@ -143,4 +143,18 @@ RSpec.describe "Item API requests" do
     get "/api/v1/items"
     expect(response.status).to eq(404)
   end
+
+  it "can find all items by name" do
+    merchant_1 = create(:merchant, name: "Rubber Ducky, LLC")
+
+    item_1 = create(:item, name: "Yellow Duck", merchant_id: merchant_1.id)
+    item_2 = create(:item, name: "Blue Duck", merchant_id: merchant_1.id)
+    item_3 = create(:item, name: "Duck Pirate", merchant_id: merchant_1.id)
+
+    get "/api/v1/items/find_all?name=duck"
+
+    expect(response).to be_successful
+
+    items = JSON.parse(response.body, symbolize_names: true)
+  end
 end
