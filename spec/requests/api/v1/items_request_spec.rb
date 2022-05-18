@@ -157,4 +157,22 @@ RSpec.describe "Item API requests" do
 
     items = JSON.parse(response.body, symbolize_names: true)
   end
+
+  it "can find one item by name fragment" do
+    merchant_1 = create(:merchant, name: "Rubber Ducky, LLC")
+
+    item_1 = create(:item, name: "Yellow Duck", merchant_id: merchant_1.id)
+    item_2 = create(:item, name: "Different Item", merchant_id: merchant_1.id)
+
+    get "/api/v1/items/find?name=cK"
+
+    expect(response).to be_successful
+
+    item = JSON.parse(response.body, symbolize_names: true)
+
+    expect(item.count).to eq(1)
+
+    expect(item[:data][:attributes]).to have_key(:name)
+    expect(item[:data][:attributes][:name]).to eq("Yellow Duck")
+  end
 end
