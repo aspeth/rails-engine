@@ -155,7 +155,23 @@ RSpec.describe "Item API requests" do
 
     expect(response).to be_successful
 
-    items = JSON.parse(response.body, symbolize_names: true)
+    items = JSON.parse(response.body, symbolize_names: true)[:data]
+
+    expect(items.count).to eq(3)
+
+    items.each do |item|
+      expect(item[:attributes]).to have_key(:name)
+      expect(item[:attributes][:name]).to be_a(String)
+      
+      expect(item[:attributes]).to have_key(:description)
+      expect(item[:attributes][:description]).to be_a(String)
+
+      expect(item[:attributes]).to have_key(:unit_price)
+      expect(item[:attributes][:unit_price]).to be_a(Float)
+
+      expect(item[:attributes]).to have_key(:merchant_id)
+      expect(item[:attributes][:merchant_id]).to be_an(Integer)
+    end
   end
 
   it "can find one item by name fragment" do
@@ -163,16 +179,38 @@ RSpec.describe "Item API requests" do
 
     item_1 = create(:item, name: "Yellow Duck", merchant_id: merchant_1.id)
     item_2 = create(:item, name: "Different Item", merchant_id: merchant_1.id)
-
+    
     get "/api/v1/items/find?name=cK"
+    
+    expect(response).to be_successful
+    
+    item = JSON.parse(response.body, symbolize_names: true)
+    
+    expect(item.count).to eq(1)
+    
+    expect(item[:data][:attributes]).to have_key(:name)
+    expect(item[:data][:attributes][:name]).to eq("Yellow Duck")
+  end
+  
+  it "can delete an item" do
+    merchant_1 = create(:merchant, name: "Rubber Ducky, LLC")
+  
+    item_1 = create(:item, name: "Yellow Duck", merchant_id: merchant_1.id)
+    item_2 = create(:item, name: "Different Item", merchant_id: merchant_1.id)
+    item_3 = create(:item, name: "Another Item", merchant_id: merchant_1.id)
+    
+    delete "/api/v1/items/#{item_1.id}"
 
     expect(response).to be_successful
 
-    item = JSON.parse(response.body, symbolize_names: true)
+    get "/api/v1/merchants/#{merchant_1.id}/items"
 
-    expect(item.count).to eq(1)
+    items = JSON.parse(response.body, symbolize_names: true)[:data]
 
-    expect(item[:data][:attributes]).to have_key(:name)
-    expect(item[:data][:attributes][:name]).to eq("Yellow Duck")
+    expect(items.count).to eq(2)
+    
+    items.each do |item|
+      expect(item[:attributes][:name]).to_not eq("Yellow Duck")
+    end
   end
 end
