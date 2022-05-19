@@ -231,4 +231,19 @@ RSpec.describe "Item API requests" do
     expect(item.count).to eq(1)
     expect(item[:data][:attributes][:name]).to eq("Different Item")
   end
+
+  it "deletes the invoice if deleted item was the only item on the invoice" do
+    merchant_1 = create(:merchant, name: "Rubber Ducky, LLC")
+    customer = Customer.create!(first_name: "Carl", last_name: "the Cat")
+
+    invoice = create(:invoice, merchant_id: merchant_1.id, customer_id: customer.id)
+    item_1 = create(:item, name: "Yellow Duck", merchant_id: merchant_1.id, unit_price: 23)
+    invoice_item = InvoiceItem.create!(item_id: item_1.id, invoice_id: invoice.id)
+
+    expect(invoice.items.count).to eq(1)
+    
+    delete "/api/v1/items/#{item_1.id}"
+
+    expect(Invoice.exists?(invoice.id)).to be false
+  end
 end
