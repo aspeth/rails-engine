@@ -9,6 +9,7 @@ To access the below endpoints, clone the project down, move into the project dir
 ## Tests can be run by typing `bundle exec rspec` in your terminal from the project directory, and using the following Postman test suites:
 
 https://www.getpostman.com/collections/a91a82a90f0c8ca26e8e
+
 https://www.getpostman.com/collections/510d75f3df3739f655ba
 
 ## Sample of Available Endpoints
