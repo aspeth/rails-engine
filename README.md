@@ -16,22 +16,22 @@ https://www.getpostman.com/collections/510d75f3df3739f655ba
 Check the Postman tests linked above for a more exhaustive list
 
 ### Get all merchants
-#### `get` http://localhost:3000/api/v1/merchants
+`get` http://localhost:3000/api/v1/merchants
 
 ### Get one merchant with id # 42
-#### `get` http://localhost:3000/api/v1/merchants/42
+`get` http://localhost:3000/api/v1/merchants/42
 
 ### Get all items for merchant with id # 42
-#### `get` http://localhost:3000/api/v1/merchants/42/items
+`get` http://localhost:3000/api/v1/merchants/42/items
 
 ### Get all items
-#### `get` http://localhost:3000/api/v1/items
+`get` http://localhost:3000/api/v1/items
 
 ### Get one item with id # 179
-#### `get` http://localhost:3000/api/v1/items/179
+`get` http://localhost:3000/api/v1/items/179
 
 ### Find one merchant by name fragment "iLl"
-#### `get` http://localhost:3000/api/v1/merchants/find?name=iLl
+`get` http://localhost:3000/api/v1/merchants/find?name=iLl
 
 ### Find all items by name fragment "hArU"
-#### `get` http://localhost:3000/api/v1/items/find_all?name=hArU
+`get` http://localhost:3000/api/v1/items/find_all?name=hArU
