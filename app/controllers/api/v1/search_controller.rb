@@ -14,6 +14,7 @@ class Api::V1::SearchController < ApplicationController
   end
 
   def all_merchants
+    #look at making into class method for merchant
     merchants = Merchant.where("name ILIKE ?", "%#{params[:name]}%")
     render json: MerchantSerializer.new(merchants)
   end

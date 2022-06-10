@@ -16,4 +16,8 @@ class Api::V1::MerchantsController < ApplicationController
       render status: 404
     end
   end
+
+  def most_items
+    render json: MerchantSerializer.new(Merchant.most_items(params[:quantity]))
+  end
 end

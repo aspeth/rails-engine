@@ -35,6 +35,7 @@ class Api::V1::ItemsController < ApplicationController
     end
   end
 
+  #would like to refactor to use callbacks and/or AR in the model
   def destroy
     item = Item.find(params[:id])
     item.invoices.each do |invoice|
